@@ -1,4 +1,4 @@
-# Lumina AI — Enterprise AI Background Remover & Vector Studio
+﻿# Lumina AI â€” Enterprise AI Background Remover & Vector Studio
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+" />
@@ -15,7 +15,7 @@ Includes **persistent PostgreSQL database integration**, structured file storage
 
 ---
 
-## 🌟 Key Features
+## ðŸŒŸ Key Features
 
 ### 1. Neural AI Background Removal (100% Offline)
 - **Universal Subject Segmentation**: Accurately isolates humans, pets (cats, dogs, animal fur), vehicles, e-commerce products, jewelry, food, furniture, and general objects.
@@ -36,7 +36,7 @@ Includes **persistent PostgreSQL database integration**, structured file storage
 ### 3. Multi-Format Export & Genuine SVG Vectorizer
 - **PNG**: Lossless original resolution preserving alpha channel.
 - **JPG / JPEG**: High-quality (95%) composite onto chosen background color or gradient.
-- **SVG Vectorizer**: Genuine raster-to-vector conversion into scalable XML `<path>` bezier geometry (via VisionCortex `vtracer` / OpenCV contour fallback) — *not* an embedded bitmap pretending to be vector.
+- **SVG Vectorizer**: Genuine raster-to-vector conversion into scalable XML `<path>` bezier geometry (via VisionCortex `vtracer` / OpenCV contour fallback) â€” *not* an embedded bitmap pretending to be vector.
 
 ### 4. Database Integration & Image Storage Management
 - **Primary Database**: PostgreSQL (production) with automatic fallback to SQLite (`storage/lumina_studio.db`) for zero-configuration local development.
@@ -47,14 +47,14 @@ Includes **persistent PostgreSQL database integration**, structured file storage
 - **Persistent Storage Hierarchy**:
   ```text
   storage/
-    ├── users/<user_id>/<image_id>/
-    │    ├── original.png
-    │    ├── cutout.png
-    │    └── exports/
-    └── guests/<guest_session_id>/<image_id>/
-         ├── original.jpg
-         ├── cutout.png
-         └── exports/
+    â”œâ”€â”€ users/<user_id>/<image_id>/
+    â”‚    â”œâ”€â”€ original.png
+    â”‚    â”œâ”€â”€ cutout.png
+    â”‚    â””â”€â”€ exports/
+    â””â”€â”€ guests/<guest_session_id>/<image_id>/
+         â”œâ”€â”€ original.jpg
+         â”œâ”€â”€ cutout.png
+         â””â”€â”€ exports/
   ```
 - **Synchronized Deletion**: Purging an image or clearing history permanently deletes both database rows and physical disk directories simultaneously.
 - **Backup & Recovery**: Built-in script (`backend/backup.py`) for automated zip archive generation.
@@ -68,44 +68,44 @@ Includes **persistent PostgreSQL database integration**, structured file storage
 
 ---
 
-## 🏗️ Architecture & Project Structure
+## ðŸ—ï¸ Architecture & Project Structure
 
 ```text
 BackgroundRemover/
-├── backend/
-│   ├── app.py                 # RESTful Flask backend & routing
-│   ├── remover.py             # U2-Net ONNX model inference engine
-│   ├── image_processor.py     # Pillow compositing & vtracer vectorizer
-│   ├── database.py            # SQLAlchemy models & PostgreSQL/SQLite engine
-│   ├── storage.py             # Persistent disk storage manager
-│   ├── migrations.py          # Automatic schema migration runner
-│   ├── backup.py              # Storage and database backup & recovery utility
-│   └── requirements.txt       # Backend dependencies
-├── frontend/
-│   ├── index.html             # Single-page application UI with Studio & Library
-│   ├── style.css              # Dark luxury aesthetic design system
-│   └── script.js              # State manager, split slider, API client, & gallery
-├── storage/                   # Persistent files (excluded from git)
-├── uploads/                   # Temporary upload buffer
-├── outputs/                   # Temporary output cache
-├── schema.sql                 # PostgreSQL DDL production schema
-├── gunicorn.conf.py           # Multi-threaded production WSGI configuration
-├── Dockerfile                 # Multi-stage production container build
-├── docker-compose.yml         # Compose stack: App + PostgreSQL 16 + Caddy SSL
-├── Caddyfile                  # Automatic Zero-Config Let's Encrypt HTTPS
-├── nginx.conf                 # Alternative production Nginx reverse proxy config
-├── deploy.sh                  # One-command Linux deployment script
-├── start_production.bat       # Windows production launcher (Waitress)
-├── start_server.bat           # Windows development launcher
-├── .env.example               # Environment variables template
-├── .gitignore                 # Excludes venv, runtime storage, secrets, models
-├── requirements.txt           # Root dependency manifest
-└── LICENSE                    # MIT License
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ app.py                 # RESTful Flask backend & routing
+â”‚   â”œâ”€â”€ remover.py             # U2-Net ONNX model inference engine
+â”‚   â”œâ”€â”€ image_processor.py     # Pillow compositing & vtracer vectorizer
+â”‚   â”œâ”€â”€ database.py            # SQLAlchemy models & PostgreSQL/SQLite engine
+â”‚   â”œâ”€â”€ storage.py             # Persistent disk storage manager
+â”‚   â”œâ”€â”€ migrations.py          # Automatic schema migration runner
+â”‚   â”œâ”€â”€ backup.py              # Storage and database backup & recovery utility
+â”‚   â””â”€â”€ requirements.txt       # Backend dependencies
+â”œâ”€â”€ frontend/
+â”‚   â”œâ”€â”€ index.html             # Single-page application UI with Studio & Library
+â”‚   â”œâ”€â”€ style.css              # Dark luxury aesthetic design system
+â”‚   â””â”€â”€ script.js              # State manager, split slider, API client, & gallery
+â”œâ”€â”€ storage/                   # Persistent files (excluded from git)
+â”œâ”€â”€ uploads/                   # Temporary upload buffer
+â”œâ”€â”€ outputs/                   # Temporary output cache
+â”œâ”€â”€ schema.sql                 # PostgreSQL DDL production schema
+â”œâ”€â”€ gunicorn.conf.py           # Multi-threaded production WSGI configuration
+â”œâ”€â”€ Dockerfile                 # Multi-stage production container build
+â”œâ”€â”€ docker-compose.yml         # Compose stack: App + PostgreSQL 16 + Caddy SSL
+â”œâ”€â”€ Caddyfile                  # Automatic Zero-Config Let's Encrypt HTTPS
+â”œâ”€â”€ nginx.conf                 # Alternative production Nginx reverse proxy config
+â”œâ”€â”€ deploy.sh                  # One-command Linux deployment script
+â”œâ”€â”€ start_production.bat       # Windows production launcher (Waitress)
+â”œâ”€â”€ start_server.bat           # Windows development launcher
+â”œâ”€â”€ .env.example               # Environment variables template
+â”œâ”€â”€ .gitignore                 # Excludes venv, runtime storage, secrets, models
+â”œâ”€â”€ requirements.txt           # Root dependency manifest
+â””â”€â”€ LICENSE                    # MIT License
 ```
 
 ---
 
-## ⚡ Quick Start (Local Development)
+## âš¡ Quick Start (Local Development)
 
 ### 1. Prerequisites
 - Python 3.10+ (Python 3.11 recommended)
@@ -147,7 +147,7 @@ Open **`http://127.0.0.1:5000`** in your browser.
 
 ---
 
-## 🐳 Production Deployment with Docker & Custom Domain
+## ðŸ³ Production Deployment with Docker & Custom Domain
 
 ### 1. Configure Environment Variables
 Copy `.env.example` to `.env`:
@@ -156,8 +156,8 @@ cp .env.example .env
 ```
 Edit `.env` with your domain and database credentials:
 ```env
-DOMAIN_NAME=yourdomain.com
-LETSENCRYPT_EMAIL=admin@yourdomain.com
+DOMAIN_NAME=parasnathpokharel.com.np
+LETSENCRYPT_EMAIL=admin@parasnathpokharel.com.np
 POSTGRES_PASSWORD=your_super_secret_password_here
 SECRET_KEY=generate_with_openssl_rand_hex_32
 ```
@@ -167,8 +167,8 @@ At your domain registrar or DNS provider (Cloudflare, Namecheap, GoDaddy, Route5
 
 | Type | Name / Host | Value / Target | TTL | Description |
 |---|---|---|---|---|
-| **A** | `@` (or apex domain) | `<Your_Server_IPv4_Address>` | Auto / 300 | Directs root domain `yourdomain.com` to your VPS |
-| **CNAME** | `www` | `yourdomain.com` | Auto / 300 | Directs `www.yourdomain.com` to your root domain |
+| **A** | `@` (or apex domain) | `<Your_Server_IPv4_Address>` | Auto / 300 | Directs root domain `parasnathpokharel.com.np` to your VPS |
+| **CNAME** | `www` | `parasnathpokharel.com.np` | Auto / 300 | Directs `www.parasnathpokharel.com.np` to your root domain |
 
 ### 3. Deploy Stack with Docker Compose
 Run the automated deployment script:
@@ -185,12 +185,12 @@ docker compose up -d --build
 1. PostgreSQL 16 container starts and mounts persistent volume `postgres_data`.
 2. Database schema migrations execute automatically (`schema.sql` and `migrations.py`).
 3. Flask app starts with Gunicorn multi-threaded workers on port 5000.
-4. Caddy reverse proxy automatically provisions a free, valid **Let's Encrypt / ZeroSSL** HTTPS certificate for `yourdomain.com` and `www.yourdomain.com`.
+4. Caddy reverse proxy automatically provisions a free, valid **Let's Encrypt / ZeroSSL** HTTPS certificate for `parasnathpokharel.com.np` and `www.parasnathpokharel.com.np`.
 5. All images uploaded and cut out are stored in persistent volume `persistent_storage`.
 
 ---
 
-## 🖥️ Alternative Production Deployment (Native Systemd + Nginx)
+## ðŸ–¥ï¸ Alternative Production Deployment (Native Systemd + Nginx)
 
 If deploying directly on an Ubuntu/Debian VPS without Docker:
 
@@ -232,14 +232,14 @@ WantedBy=multi-user.target
 Copy `nginx.conf` to `/etc/nginx/sites-available/lumina.conf`:
 ```bash
 sudo ln -s /etc/nginx/sites-available/lumina.conf /etc/nginx/sites-enabled/
-sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+sudo certbot --nginx -d parasnathpokharel.com.np -d www.parasnathpokharel.com.np
 sudo systemctl restart nginx
 sudo systemctl enable --now lumina
 ```
 
 ---
 
-## 🗄️ Database Backup & Restore
+## ðŸ—„ï¸ Database Backup & Restore
 
 To take a snapshot of database records and stored images:
 ```bash
@@ -252,7 +252,7 @@ python backend/backup.py restore backups/lumina_backup_YYYYMMDD_HHMMSS.zip
 
 ---
 
-## 🐙 Push to GitHub Repository
+## ðŸ™ Push to GitHub Repository
 
 To upload this project to your GitHub repository:
 
@@ -280,7 +280,7 @@ git push -u origin main
 
 ---
 
-## 🔒 Privacy & Data Governance
+## ðŸ”’ Privacy & Data Governance
 
 - **Zero Third-Party Telemetry**: Images are processed directly on your server via local ONNX runtime neural inference.
 - **Private Storage**: Stored images are isolated by user or guest session token.
@@ -288,5 +288,5 @@ git push -u origin main
 
 ---
 
-## 📄 License
+## ðŸ“„ License
 This project is licensed under the [MIT License](LICENSE).

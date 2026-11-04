@@ -68,7 +68,8 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      DOMAIN: ${DOMAIN_NAME:-localhost}
+      DOMAIN_NAME: ${DOMAIN_NAME:-parasnathpokharel.com.np}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-admin@parasnathpokharel.com.np}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

@@ -1,15 +1,17 @@
 # ==============================================================================
 # Lumina AI — Caddy Reverse Proxy & Automatic SSL Configuration
+# Domain: parasnathpokharel.com.np & www.parasnathpokharel.com.np
 # Caddy automatically provisions and renews Let's Encrypt / ZeroSSL certificates.
 # ==============================================================================
 
 # Global options
 {
     admin off
+    email {$LETSENCRYPT_EMAIL:admin@parasnathpokharel.com.np}
 }
 
-# Production Domain Configuration
-{$DOMAIN_NAME:localhost} {
+# Primary Domain — www.parasnathpokharel.com.np
+www.parasnathpokharel.com.np {
     # Reverse proxy to Flask/Gunicorn container
     reverse_proxy web:5000 {
         header_up Host {host}
@@ -27,7 +29,7 @@
         Permissions-Policy "camera=(), microphone=(), geolocation=()"
     }
 
-    # Enable Gzip and Zstandard compression
+    # Enable Gzip and Zstandard compression for performance
     encode gzip zstd
 
     # Logging
@@ -37,7 +39,7 @@
     }
 }
 
-# Redirect www to apex (or apex to www depending on preference)
-www.{$DOMAIN_NAME} {
-    redir https://{$DOMAIN_NAME}{uri} permanent
+# Redirect apex domain to www (canonical URL)
+parasnathpokharel.com.np {
+    redir https://www.parasnathpokharel.com.np{uri} permanent
 }
