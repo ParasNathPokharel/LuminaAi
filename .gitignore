@@ -1,0 +1,53 @@
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.cert
+
+# Persistent Storage & Uploads (runtime data)
+storage/*
+!storage/.gitkeep
+storage/**/*.png
+storage/**/*.jpg
+storage/**/*.jpeg
+storage/**/*.svg
+storage/**/*.webp
+storage/**/*.db
+storage/**/*.sqlite
+
+uploads/*
+!uploads/.gitkeep
+outputs/*
+!outputs/.gitkeep
+
+# Databases & SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Large AI Model Weights (downloaded dynamically via remover.py)
+*.onnx
+.u2net/
+
+# System & IDE files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+*.tmp

@@ -1,0 +1,43 @@
+# ==============================================================================
+# Lumina AI — Caddy Reverse Proxy & Automatic SSL Configuration
+# Caddy automatically provisions and renews Let's Encrypt / ZeroSSL certificates.
+# ==============================================================================
+
+# Global options
+{
+    admin off
+}
+
+# Production Domain Configuration
+{$DOMAIN_NAME:localhost} {
+    # Reverse proxy to Flask/Gunicorn container
+    reverse_proxy web:5000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Security Headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+
+    # Enable Gzip and Zstandard compression
+    encode gzip zstd
+
+    # Logging
+    log {
+        output stdout
+        format console
+    }
+}
+
+# Redirect www to apex (or apex to www depending on preference)
+www.{$DOMAIN_NAME} {
+    redir https://{$DOMAIN_NAME}{uri} permanent
+}

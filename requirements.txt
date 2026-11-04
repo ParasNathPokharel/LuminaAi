@@ -1,0 +1,13 @@
+Flask>=2.3.0
+flask-cors>=4.0.0
+rembg>=2.0.50
+onnxruntime>=1.15.0
+pillow>=10.0.0
+numpy>=1.24.0
+opencv-python-headless>=4.8.0
+vtracer>=0.6.4
+SQLAlchemy>=2.0.0
+psycopg2-binary>=2.9.9
+python-dotenv>=1.0.0
+waitress>=3.0.0
+gunicorn>=22.0.0; sys_platform != 'win32'

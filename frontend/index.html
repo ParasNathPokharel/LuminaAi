@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina AI — High Precision AI Background Remover</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Ambient background glow layers -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <!-- Main Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-logo">
+        <div class="logo-icon-wrapper">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Lumina<span class="gradient-text">AI</span></span>
+          <span class="brand-badge">STUDIO</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#hero-section" class="nav-link active">Studio</a>
+        <a href="#library-section" class="nav-link" id="navLibraryLink">
+          My Library
+          <span class="nav-badge" id="libraryCountBadge">0</span>
+        </a>
+        <a href="#features-section" class="nav-link">Capabilities</a>
+        <a href="#vector-info" class="nav-link">SVG Vectorizer</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="btn btn-subtle-account" id="accountBtn" title="Account & Session Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span id="accountLabel">Guest Session</span>
+        </button>
+
+        <div class="ai-status-pill" id="aiStatusPill" title="Local AI Engine Status">
+          <span class="status-dot"></span>
+          <span class="status-label">U2-Net Neural Engine</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Hero & Upload Section -->
+    <section id="hero-section" class="hero-section">
+      <div class="hero-container">
+        <div class="hero-header">
+          <div class="hero-pill">
+            <span class="pill-sparkle">✦</span>
+            <span>Next-Gen Offline AI Neural Segmentation</span>
+          </div>
+          <h1 class="hero-title">
+            Remove Backgrounds.<br>
+            <span class="gradient-text">Keep What Matters.</span>
+          </h1>
+          <p class="hero-subtitle">
+            Instantly remove image backgrounds using AI. Upload your image and get a clean, transparent result in seconds.
+          </p>
+        </div>
+
+        <!-- Before / After Showcase Banner (Interactive Demo before uploading) -->
+        <div class="hero-demo-preview" id="heroDemoSection">
+          <div class="demo-card">
+            <div class="demo-slider-wrapper" id="heroSlider">
+              <img class="demo-img demo-original" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Sample Portrait Original" id="heroDemoOrig">
+              <div class="demo-cutout-container" id="heroDemoCutoutWrapper">
+                <img class="demo-img demo-cutout" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Sample Portrait Cutout" id="heroDemoCutout">
+              </div>
+              <div class="demo-slider-bar" id="heroSliderBar">
+                <div class="demo-slider-knob">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>
+                </div>
+              </div>
+              <div class="demo-label label-original">Original</div>
+              <div class="demo-label label-removed">AI Cutout</div>
+            </div>
+            <div class="demo-hint">
+              <span>Drag slider to compare AI edge preservation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Upload Zone -->
+        <div class="upload-section" id="uploadSection">
+          <div class="dropzone" id="dropZone">
+            <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" class="file-input-hidden">
+
+            <div class="dropzone-content">
+              <div class="dropzone-icon-circle">
+                <svg class="upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M12 12v9m-4-4l4-4 4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="pulse-ring"></div>
+              </div>
+
+              <h3 class="dropzone-title">Drag and drop your image here</h3>
+              <p class="dropzone-subtitle">or click anywhere in this card to select from your device</p>
+
+              <button type="button" class="btn btn-luxury-primary" id="browseBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                <span>Browse Image</span>
+              </button>
+
+              <div class="upload-badges">
+                <span class="badge badge-format">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="badge-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  JPG, JPEG, PNG, WebP
+                </span>
+                <span class="badge badge-size">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="badge-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+                  Up to 25 MB
+                </span>
+                <span class="badge badge-secure">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="badge-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  100% Local AI & Private
+                </span>
+              </div>
+            </div>
+
+            <!-- Upload drag hover border effect -->
+            <div class="dropzone-border-glow"></div>
+          </div>
+
+          <!-- Quick Sample Images Tray -->
+          <div class="samples-tray">
+            <span class="samples-label">Or test with one of these samples:</span>
+            <div class="samples-grid">
+              <button type="button" class="sample-chip" data-sample="portrait">
+                <span class="sample-tag">Portrait</span>
+                <span class="sample-sub">Human / Hair</span>
+              </button>
+              <button type="button" class="sample-chip" data-sample="pet">
+                <span class="sample-tag">Pet</span>
+                <span class="sample-sub">Dog / Fur</span>
+              </button>
+              <button type="button" class="sample-chip" data-sample="car">
+                <span class="sample-tag">Vehicle</span>
+                <span class="sample-sub">Sports Car</span>
+              </button>
+              <button type="button" class="sample-chip" data-sample="product">
+                <span class="sample-tag">Product</span>
+                <span class="sample-sub">Sneaker / Studio</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Processing State Overlay -->
+        <div class="processing-card" id="processingCard" style="display: none;">
+          <div class="processing-content">
+            <div class="scanner-visual">
+              <div class="scanner-canvas-wrapper">
+                <img id="processingPreviewImg" src="" alt="Processing image">
+                <div class="scan-laser-line"></div>
+              </div>
+            </div>
+
+            <div class="processing-info">
+              <div class="spinner-ring"></div>
+              <h3 class="processing-title" id="processingStatusTitle">Analyzing image contours...</h3>
+              <p class="processing-step" id="processingStatusStep">Initializing local neural model...</p>
+
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+              </div>
+
+              <div class="processing-tags">
+                <span class="processing-tag active" id="step1">1. Image Validation</span>
+                <span class="processing-tag" id="step2">2. Deep AI Inference</span>
+                <span class="processing-tag" id="step3">3. Alpha Matting</span>
+                <span class="processing-tag" id="step4">4. Lossless Rendering</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Editor & Preview Studio Section (Shown upon processing completion) -->
+    <section id="editor-section" class="editor-section" style="display: none;">
+      <div class="editor-container">
+        <!-- Top Studio Bar -->
+        <div class="studio-header-bar">
+          <div class="file-meta-group">
+            <div class="meta-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="meta-details">
+              <span class="meta-filename" id="metaFilename">image.png</span>
+              <span class="meta-stats" id="metaStats">1920 × 1080 px • 840ms processing</span>
+            </div>
+          </div>
+
+          <!-- View Mode Switcher -->
+          <div class="view-mode-tabs">
+            <button type="button" class="view-tab active" data-mode="slider" title="Split Before/After Slider">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+              <span>Comparison Slider</span>
+            </button>
+            <button type="button" class="view-tab" data-mode="cutout" title="Background Removed Only">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24M14.83 14.83l4.24 4.24"/></svg>
+              <span>Cutout Only</span>
+            </button>
+            <button type="button" class="view-tab" data-mode="side" title="Side-by-side View">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="16" rx="1"/><rect x="13" y="4" width="8" height="16" rx="1"/></svg>
+              <span>Side-by-Side</span>
+            </button>
+          </div>
+
+          <!-- Zoom & Canvas Actions -->
+          <div class="canvas-controls">
+            <button type="button" class="tool-btn" id="zoomOutBtn" title="Zoom Out (-)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+            <span class="zoom-level-label" id="zoomLevelLabel">100%</span>
+            <button type="button" class="tool-btn" id="zoomInBtn" title="Zoom In (+)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+            <button type="button" class="tool-btn" id="fitScreenBtn" title="Fit to Screen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+            <div class="btn-divider"></div>
+            <button type="button" class="btn btn-secondary-subtle" id="uploadAnotherBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Upload New</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Studio Main Workspace Area -->
+        <div class="studio-workspace">
+          <!-- Canvas Viewport -->
+          <div class="canvas-viewport" id="canvasViewport">
+            <!-- Mode 1: Interactive Comparison Split Slider -->
+            <div class="split-slider-container" id="splitSliderContainer">
+              <div class="slider-image-layer layer-original" id="sliderOrigLayer">
+                <img id="sliderOrigImg" src="" alt="Original Image">
+              </div>
+              <div class="slider-image-layer layer-processed" id="sliderProcLayer">
+                <div class="processed-backdrop-wrapper" id="sliderBackdropWrapper">
+                  <img id="sliderProcImg" src="" alt="Processed Cutout Image">
+                </div>
+              </div>
+              <!-- Draggable Handle Bar -->
+              <div class="slider-handle-bar" id="sliderHandleBar">
+                <div class="slider-handle-knob">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="view-tag tag-left">Original</div>
+              <div class="view-tag tag-right">AI Cutout</div>
+            </div>
+
+            <!-- Mode 2: Cutout Only -->
+            <div class="cutout-only-container" id="cutoutOnlyContainer" style="display: none;">
+              <div class="processed-backdrop-wrapper" id="cutoutBackdropWrapper">
+                <img id="cutoutOnlyImg" src="" alt="Processed Cutout Image">
+              </div>
+            </div>
+
+            <!-- Mode 3: Side-by-Side View -->
+            <div class="side-by-side-container" id="sideBySideContainer" style="display: none;">
+              <div class="side-panel">
+                <div class="side-panel-title">Original Photo</div>
+                <div class="side-img-box">
+                  <img id="sideOrigImg" src="" alt="Original Photo">
+                </div>
+              </div>
+              <div class="side-panel">
+                <div class="side-panel-title">AI Background Removed</div>
+                <div class="side-img-box processed-backdrop-wrapper" id="sideBackdropWrapper">
+                  <img id="sideProcImg" src="" alt="Cutout Photo">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Studio Sidebar Controls: Background Replacer & Export Panel -->
+          <div class="studio-sidebar">
+            <!-- Background Replacement Section -->
+            <div class="sidebar-card">
+              <div class="card-header-row">
+                <h3 class="sidebar-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                  Replace Background
+                </h3>
+                <span class="preview-badge">Live Preview</span>
+              </div>
+
+              <!-- Background Type Tabs -->
+              <div class="bg-type-tabs">
+                <button type="button" class="bg-tab active" data-bg="transparent">Transparent</button>
+                <button type="button" class="bg-tab" data-bg="color">Solid</button>
+                <button type="button" class="bg-tab" data-bg="gradient">Gradient</button>
+                <button type="button" class="bg-tab" data-bg="image">Custom Photo</button>
+              </div>
+
+              <!-- BG Settings: Transparent -->
+              <div class="bg-settings-panel" id="bgSettingsTransparent">
+                <div class="checker-notice">
+                  <div class="checker-box-demo"></div>
+                  <div class="checker-text">
+                    <strong>Checkerboard Transparency Pattern</strong>
+                    <span>Visually separates transparent pixels from solid white. Perfect for PNG exports & stickers.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BG Settings: Solid Color -->
+              <div class="bg-settings-panel" id="bgSettingsColor" style="display: none;">
+                <label class="setting-label">Preset Colors</label>
+                <div class="color-palette-grid">
+                  <button type="button" class="color-swatch-btn" data-color="#ffffff" style="background:#ffffff;" title="Pure White"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#0a0b0e" style="background:#0a0b0e;" title="Pure Black"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#1e222d" style="background:#1e222d;" title="Charcoal"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#e2e8f0" style="background:#e2e8f0;" title="Studio Gray"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#ef4444" style="background:#ef4444;" title="Vibrant Red"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#3b82f6" style="background:#3b82f6;" title="Electric Blue"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#10b981" style="background:#10b981;" title="Emerald"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#f59e0b" style="background:#f59e0b;" title="Warm Amber"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#8b5cf6" style="background:#8b5cf6;" title="Royal Violet"></button>
+                  <button type="button" class="color-swatch-btn" data-color="#ec4899" style="background:#ec4899;" title="Rose Pink"></button>
+                </div>
+
+                <div class="custom-color-row">
+                  <label class="setting-label">Custom Color:</label>
+                  <div class="color-input-wrapper">
+                    <input type="color" id="customColorPicker" value="#ffffff">
+                    <input type="text" id="customColorHex" value="#FFFFFF" maxlength="7" class="hex-text-input">
+                  </div>
+                </div>
+              </div>
+
+              <!-- BG Settings: Gradient -->
+              <div class="bg-settings-panel" id="bgSettingsGradient" style="display: none;">
+                <label class="setting-label">Preset Gradients</label>
+                <div class="gradient-palette-grid">
+                  <button type="button" class="gradient-swatch-btn" data-g1="#3b82f6" data-g2="#9333ea" data-dir="vertical" style="background: linear-gradient(to bottom, #3b82f6, #9333ea);" title="Cyberpunk Aurora"></button>
+                  <button type="button" class="gradient-swatch-btn" data-g1="#f43f5e" data-g2="#fbbf24" data-dir="vertical" style="background: linear-gradient(to bottom, #f43f5e, #fbbf24);" title="Sunset Fire"></button>
+                  <button type="button" class="gradient-swatch-btn" data-g1="#06b6d4" data-g2="#3b82f6" data-dir="vertical" style="background: linear-gradient(to bottom, #06b6d4, #3b82f6);" title="Ocean Breeze"></button>
+                  <button type="button" class="gradient-swatch-btn" data-g1="#10b981" data-g2="#064e3b" data-dir="vertical" style="background: linear-gradient(to bottom, #10b981, #064e3b);" title="Deep Forest"></button>
+                  <button type="button" class="gradient-swatch-btn" data-g1="#1e1e24" data-g2="#0f0f11" data-dir="vertical" style="background: linear-gradient(to bottom, #1e1e24, #0f0f11);" title="Midnight Luxe"></button>
+                  <button type="button" class="gradient-swatch-btn" data-g1="#ff9a9e" data-g2="#fecfef" data-dir="vertical" style="background: linear-gradient(to bottom, #ff9a9e, #fecfef);" title="Pastel Peach"></button>
+                </div>
+
+                <div class="gradient-controls-row">
+                  <div class="gradient-picker-item">
+                    <span>Start:</span>
+                    <input type="color" id="gradientStartPicker" value="#3b82f6">
+                  </div>
+                  <div class="gradient-picker-item">
+                    <span>End:</span>
+                    <input type="color" id="gradientEndPicker" value="#9333ea">
+                  </div>
+                  <div class="gradient-picker-item">
+                    <span>Angle:</span>
+                    <select id="gradientDirectionSelect" class="styled-select">
+                      <option value="vertical">Vertical</option>
+                      <option value="horizontal">Horizontal</option>
+                      <option value="diagonal">Diagonal</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BG Settings: Custom Photo Background -->
+              <div class="bg-settings-panel" id="bgSettingsImage" style="display: none;">
+                <label class="setting-label">Upload Backdrop Wallpaper</label>
+                <div class="custom-bg-dropzone" id="customBgDropzone">
+                  <input type="file" id="customBgInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-upload-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span id="customBgFileName">Click to select backdrop photo</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Download and Export Section -->
+            <div class="sidebar-card export-card">
+              <h3 class="sidebar-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="title-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download & Export
+              </h3>
+
+              <div class="export-format-selector">
+                <label class="format-card selected" data-format="png">
+                  <input type="radio" name="exportFormat" value="png" checked>
+                  <div class="format-card-content">
+                    <div class="format-title-row">
+                      <span class="format-name">PNG</span>
+                      <span class="format-pill">Default</span>
+                    </div>
+                    <p class="format-desc">Preserves transparency. Lossless original resolution.</p>
+                  </div>
+                </label>
+
+                <label class="format-card" data-format="jpg">
+                  <input type="radio" name="exportFormat" value="jpg">
+                  <div class="format-card-content">
+                    <div class="format-title-row">
+                      <span class="format-name">JPG / JPEG</span>
+                      <span class="format-pill">Solid/Gradient BG</span>
+                    </div>
+                    <p class="format-desc">Composites subject onto selected background color at 95% quality.</p>
+                  </div>
+                </label>
+
+                <label class="format-card" data-format="svg">
+                  <input type="radio" name="exportFormat" value="svg">
+                  <div class="format-card-content">
+                    <div class="format-title-row">
+                      <span class="format-name">SVG</span>
+                      <span class="format-pill vector-pill">Genuine Vector</span>
+                    </div>
+                    <p class="format-desc">Converts raster pixels into scalable vector paths (not an embedded PNG).</p>
+                  </div>
+                </label>
+              </div>
+
+              <!-- SVG Notice alert -->
+              <div class="svg-notice-box" id="svgNoticeBox" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="notice-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Vector Notice:</strong> Genuine vectorization groups colors into bezier/polygon paths. Great for illustrations and stickers; photorealistic textures are stylized.</span>
+              </div>
+
+              <!-- Main Download CTA Button -->
+              <button type="button" class="btn btn-download-primary" id="downloadBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span id="downloadBtnText">Download PNG</span>
+              </button>
+
+              <button type="button" class="btn btn-link-reset" id="resetStudioBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                <span>Reset and Upload Another Image</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- My Image Library Section -->
+    <section id="library-section" class="library-section">
+      <div class="section-container">
+        <div class="library-header-row">
+          <div>
+            <div class="section-badge">PERSISTENT STORAGE & DATABASE</div>
+            <h2 class="section-title">My Image Library</h2>
+            <p class="section-subtitle">View, compare, re-export, or manage your previously uploaded images and AI cutouts.</p>
+          </div>
+          <div class="library-header-actions">
+            <button type="button" class="btn btn-secondary-subtle" id="refreshLibraryBtn" title="Refresh Library">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span>Refresh</span>
+            </button>
+            <button type="button" class="btn btn-danger-subtle" id="clearAllHistoryBtn" title="Purge All Persistent History">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Clear History</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Library Filter & Search Toolbar -->
+        <div class="library-toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="librarySearchInput" class="search-input" placeholder="Search by image filename...">
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">Format:</span>
+            <div class="filter-chips">
+              <button type="button" class="filter-chip active" data-filter="all">All</button>
+              <button type="button" class="filter-chip" data-filter="png">PNG</button>
+              <button type="button" class="filter-chip" data-filter="jpg">JPG</button>
+              <button type="button" class="filter-chip" data-filter="webp">WEBP</button>
+            </div>
+          </div>
+
+          <div class="sort-group">
+            <span class="filter-label">Sort:</span>
+            <select id="librarySortSelect" class="sort-select">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="name">Name (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Library Grid Container -->
+        <div class="library-grid" id="libraryGrid">
+          <!-- Dynamically populated cards -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="library-empty" id="libraryEmpty" style="display: none;">
+          <div class="empty-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+          </div>
+          <h3 class="empty-title">Your image library is empty</h3>
+          <p class="empty-subtitle">Upload an image above to automatically remove its background and save it to your persistent gallery.</p>
+          <button type="button" class="btn btn-luxury-primary" id="emptyUploadBtn">
+            <span>Upload Image Now</span>
+          </button>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="library-pagination" id="libraryPagination" style="display: none;">
+          <button type="button" class="page-btn" id="prevPageBtn" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Previous</span>
+          </button>
+          <div class="page-indicator" id="pageIndicator">Page 1 of 1</div>
+          <button type="button" class="page-btn" id="nextPageBtn" disabled>
+            <span>Next</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities & Features Section -->
+    <section id="features-section" class="features-section">
+      <div class="section-container">
+        <div class="section-heading text-center">
+          <span class="section-badge">AI ARCHITECTURE</span>
+          <h2 class="section-title">Built for Production Quality & Ultimate Privacy</h2>
+          <p class="section-subtitle">Local neural segmentation running directly on your machine. No paid APIs, no rate limits, zero data leaks.</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h4 class="feature-title">Universal Subject Detection</h4>
+            <p class="feature-text">Engineered for humans, pets, cars, furniture, e-commerce products, jewelry, food, and complex foreground objects.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <h4 class="feature-title">Alpha Matting & Edge Precision</h4>
+            <p class="feature-text">Preserves wispy hair, animal fur, semitransparent veils, and glass reflection edges with sub-pixel alpha gradients.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h4 class="feature-title">Persistent In-Memory AI Model</h4>
+            <p class="feature-text">The neural model remains resident in memory. No repeated cold starts, guaranteeing ultra-low latency response times.</p>
+          </div>
+
+          <div class="feature-card" id="vector-info">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <h4 class="feature-title">Genuine Vector SVG Export</h4>
+            <p class="feature-text">Converts bitmap pixels into actual scalable SVG path geometry for cutting machines, plotters, logos, and vector illustrations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-title">Lumina<span class="gradient-text">AI</span></span>
+        <span class="footer-copy">© 2026 AI Background Remover Studio • Locally Running High-Precision AI</span>
+      </div>
+      <div class="footer-tags">
+        <span class="tech-tag">Flask</span>
+        <span class="tech-tag">ONNX Runtime</span>
+        <span class="tech-tag">rembg u2net</span>
+        <span class="tech-tag">Pillow</span>
+        <span class="tech-tag">vtracer / OpenCV</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Library Detail / Compare Modal -->
+  <div class="modal-overlay" id="libraryDetailModal" style="display: none;">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 class="modal-title" id="modalImageTitle">Image Details</h3>
+          <span class="modal-badge" id="modalImageBadge">PNG Cutout</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeDetailModalBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-compare-grid">
+          <div class="modal-img-col">
+            <span class="col-tag">Original</span>
+            <div class="modal-img-box">
+              <img id="modalOrigImg" src="" alt="Original">
+            </div>
+          </div>
+          <div class="modal-img-col">
+            <span class="col-tag">AI Cutout (Transparent)</span>
+            <div class="modal-img-box checkerboard-bg">
+              <img id="modalProcImg" src="" alt="Processed Cutout">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Resolution</span>
+            <span class="meta-val" id="modalMetaRes">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">File Size</span>
+            <span class="meta-val" id="modalMetaSize">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Created At</span>
+            <span class="meta-val" id="modalMetaDate">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Processing Status</span>
+            <span class="meta-val status-badge-ok" id="modalMetaStatus">Completed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger-subtle" id="modalDeleteBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>Delete</span>
+        </button>
+        <div class="modal-footer-right">
+          <button type="button" class="btn btn-secondary-subtle" id="modalOpenStudioBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <span>Open in Studio</span>
+          </button>
+          <div class="dropdown-wrapper">
+            <button type="button" class="btn btn-luxury-primary" id="modalDownloadBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              <span>Download Cutout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account / Session Modal -->
+  <div class="modal-overlay" id="accountModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Account & Storage Settings</h3>
+        <button type="button" class="modal-close-btn" id="closeAccountModalBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="session-info-card">
+          <div class="session-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+          <div class="session-details">
+            <div class="session-type" id="sessionTypeDisplay">Guest Session</div>
+            <div class="session-id-text" id="sessionIdDisplay">Session ID: --</div>
+          </div>
+          <button type="button" class="btn-icon-subtle" id="copySessionBtn" title="Copy Session ID">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+        </div>
+
+        <div class="account-tabs">
+          <button type="button" class="account-tab active" data-tab="login">Sign In</button>
+          <button type="button" class="account-tab" data-tab="register">Register Account</button>
+        </div>
+
+        <form id="authForm" class="auth-form">
+          <div class="form-group">
+            <label class="form-label" for="authUsername">Username</label>
+            <input type="text" id="authUsername" class="form-input" placeholder="Enter username..." required>
+          </div>
+          <div class="form-group" id="emailGroup" style="display: none;">
+            <label class="form-label" for="authEmail">Email (Optional)</label>
+            <input type="email" id="authEmail" class="form-input" placeholder="user@example.com">
+          </div>
+          <button type="submit" class="btn btn-luxury-primary btn-block" id="authSubmitBtn">
+            <span>Sign In</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-overlay" id="privacyModal" style="display: none;">
+    <div class="modal-card modal-md">
+      <div class="modal-header">
+        <h3 class="modal-title">Privacy & Data Governance</h3>
+        <button type="button" class="modal-close-btn" id="closePrivacyModalBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body text-dim privacy-content">
+        <h4>100% Offline AI Inference</h4>
+        <p>All background removals are calculated on this server using local neural network weights (U2-Net). No images are ever transmitted to third-party APIs or cloud trackers.</p>
+        <br>
+        <h4>Persistent Private Storage</h4>
+        <p>Uploaded original images, transparent cutouts, and exported files are kept in isolated private storage associated strictly with your session or account.</p>
+        <br>
+        <h4>Complete Right to Erasure</h4>
+        <p>You can permanently delete any individual image or purge your entire image library at any time using the "Clear History" button. Deletion immediately removes both database records and physical disk files.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-luxury-primary" id="ackPrivacyBtn">
+          <span>Understood</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Privacy Banner -->
+  <div class="privacy-banner" id="privacyBanner">
+    <div class="privacy-banner-content">
+      <span class="privacy-icon">🔒</span>
+      <span class="privacy-text">
+        <strong>Privacy First:</strong> Images are processed locally by offline AI. Stored privately on your server with full instant deletion rights.
+      </span>
+      <button type="button" class="btn-text-link" id="openPrivacyModalBtn">Learn More</button>
+      <button type="button" class="btn-icon-close" id="dismissPrivacyBannerBtn" title="Dismiss">✕</button>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

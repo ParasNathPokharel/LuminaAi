@@ -1,0 +1,93 @@
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL Database Service
+  # ----------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    container_name: lumina_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_secure_pass_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-lumina_bgremover}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-lumina_bgremover}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lumina_net
+
+  # ----------------------------------------------------------------------------
+  # Lumina AI Web Application (Flask + Gunicorn + rembg U2-Net)
+  # ----------------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lumina_web
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FLASK_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres_secure_pass_2026}@db:5432/${POSTGRES_DB:-lumina_bgremover}
+      STORAGE_DIR: /app/storage
+      U2NET_HOME: /root/.u2net
+      U2NET_MODEL: u2net
+      SECRET_KEY: ${SECRET_KEY:-lumina_production_secret_key_change_me}
+      PORT: 5000
+      GUNICORN_WORKERS: 2
+      GUNICORN_THREADS: 4
+    volumes:
+      # Persistent storage volume — survives container teardowns and restarts
+      - persistent_storage:/app/storage
+      # Persistent model volume — avoids re-downloading 176MB weights
+      - u2net_models:/root/.u2net
+    ports:
+      - "5000:5000"
+    networks:
+      - lumina_net
+
+  # ----------------------------------------------------------------------------
+  # Automated Reverse Proxy & SSL (Caddy — Zero Config Let's Encrypt)
+  # ----------------------------------------------------------------------------
+  caddy:
+    image: caddy:2-alpine
+    container_name: lumina_caddy
+    restart: always
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN_NAME:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - lumina_net
+
+volumes:
+  postgres_data:
+    name: lumina_postgres_data
+  persistent_storage:
+    name: lumina_persistent_storage
+  u2net_models:
+    name: lumina_u2net_models
+  caddy_data:
+    name: lumina_caddy_data
+  caddy_config:
+    name: lumina_caddy_config
+
+networks:
+  lumina_net:
+    driver: bridge
