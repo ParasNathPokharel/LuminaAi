@@ -52,7 +52,27 @@
           <span class="status-dot"></span>
           <span class="status-label">U2-Net Neural Engine</span>
         </div>
+        <button type="button" class="btn btn-icon-mobile-nav" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+      <nav class="mobile-nav-links">
+        <a href="#hero-section" class="mobile-nav-link active">Studio</a>
+        <a href="#library-section" class="mobile-nav-link" id="mobileNavLibraryLink">
+          My Library
+          <span class="nav-badge" id="mobileLibraryCountBadge">0</span>
+        </a>
+        <a href="#features-section" class="mobile-nav-link">Capabilities</a>
+        <a href="#vector-info" class="mobile-nav-link">SVG Vectorizer</a>
+      </nav>
     </div>
   </header>
 
@@ -99,7 +119,7 @@
         <!-- Drag & Drop Upload Zone -->
         <div class="upload-section" id="uploadSection">
           <div class="dropzone" id="dropZone">
-            <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" class="file-input-hidden">
+            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" class="file-input-hidden">
 
             <div class="dropzone-content">
               <div class="dropzone-icon-circle">
@@ -388,7 +408,7 @@
               <div class="bg-settings-panel" id="bgSettingsImage" style="display: none;">
                 <label class="setting-label">Upload Backdrop Wallpaper</label>
                 <div class="custom-bg-dropzone" id="customBgDropzone">
-                  <input type="file" id="customBgInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+                  <input type="file" id="customBgInput" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" style="display:none;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mini-upload-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                   <span id="customBgFileName">Click to select backdrop photo</span>
                 </div>

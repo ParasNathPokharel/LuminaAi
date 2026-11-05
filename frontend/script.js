@@ -59,8 +59,11 @@
     aiStatusPill: document.getElementById('aiStatusPill'),
     navLibraryLink: document.getElementById('navLibraryLink'),
     libraryCountBadge: document.getElementById('libraryCountBadge'),
+    mobileLibraryCountBadge: document.getElementById('mobileLibraryCountBadge'),
     accountBtn: document.getElementById('accountBtn'),
     accountLabel: document.getElementById('accountLabel'),
+    mobileMenuToggle: document.getElementById('mobileMenuToggle'),
+    mobileNavDrawer: document.getElementById('mobileNavDrawer'),
 
     // Hero & Demo Slider
     heroSlider: document.getElementById('heroSlider'),
@@ -210,6 +213,7 @@
   // =========================================================================
   function init() {
     initIdentity();
+    setupMobileMenu();
     setupHeroDemoSlider();
     setupDropzone();
     setupSampleChips();
@@ -269,6 +273,25 @@
   }
 
   // =========================================================================
+  // Mobile Navigation Drawer Toggle
+  // =========================================================================
+  function setupMobileMenu() {
+    const { mobileMenuToggle, mobileNavDrawer } = elements;
+    if (!mobileMenuToggle || !mobileNavDrawer) return;
+
+    mobileMenuToggle.addEventListener('click', () => {
+      mobileNavDrawer.classList.toggle('open');
+    });
+
+    const mobileLinks = mobileNavDrawer.querySelectorAll('.mobile-nav-link');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNavDrawer.classList.remove('open');
+      });
+    });
+  }
+
+  // =========================================================================
   // Hero Demo Slider (Interactive Before/After on Landing)
   // =========================================================================
   function setupHeroDemoSlider() {
@@ -302,13 +325,18 @@
     // Touch support for mobile/tablets
     elements.heroSlider.addEventListener('touchstart', (e) => {
       isDragging = true;
-      updateHeroSlider(e.touches[0].clientX);
+      if (e.touches && e.touches[0]) {
+        updateHeroSlider(e.touches[0].clientX);
+      }
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
-      updateHeroSlider(e.touches[0].clientX);
-    }, { passive: true });
+      if (e.cancelable) e.preventDefault();
+      if (e.touches && e.touches[0]) {
+        updateHeroSlider(e.touches[0].clientX);
+      }
+    }, { passive: false });
 
     window.addEventListener('touchend', () => {
       isDragging = false;
@@ -605,13 +633,18 @@
     // Touch
     splitSliderContainer.addEventListener('touchstart', (e) => {
       isDragging = true;
-      handleSplitMove(e.touches[0].clientX);
+      if (e.touches && e.touches[0]) {
+        handleSplitMove(e.touches[0].clientX);
+      }
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
-      handleSplitMove(e.touches[0].clientX);
-    }, { passive: true });
+      if (e.cancelable) e.preventDefault();
+      if (e.touches && e.touches[0]) {
+        handleSplitMove(e.touches[0].clientX);
+      }
+    }, { passive: false });
 
     window.addEventListener('touchend', () => {
       isDragging = false;
@@ -1120,6 +1153,9 @@
       // Update badge count
       if (elements.libraryCountBadge) {
         elements.libraryCountBadge.textContent = data.pagination.total_items || 0;
+      }
+      if (elements.mobileLibraryCountBadge) {
+        elements.mobileLibraryCountBadge.textContent = data.pagination.total_items || 0;
       }
 
     } catch (err) {
