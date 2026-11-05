@@ -12,6 +12,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     U2NET_HOME=/root/.u2net
 
 WORKDIR /app
+ENV PYTHONPATH=/app/backend
 
 # Install system dependencies required for OpenCV, Pillow, and C compilation
 RUN apt-get update && apt-get install -y --no-install-recommends \
