@@ -57,10 +57,11 @@ except Exception as e:
 # In-memory LRU cache for ultra-fast recent image access
 PROCESSED_CACHE = {}
 
-# Initialize Background Remover singleton
+# Initialize Background Remover singleton (defaults to lightweight u2netp or distributed worker)
 remover_service = None
 try:
-    remover_service = BackgroundRemoverService.get_instance(model_name="u2net")
+    configured_model = os.environ.get("REMBG_MODEL", "u2netp")
+    remover_service = BackgroundRemoverService.get_instance(model_name=configured_model)
 except Exception as e:
     logger.warning(f"Initial model loading deferred: {e}")
 
@@ -161,7 +162,8 @@ def health_check():
     return jsonify({
         "status": "ok" if (is_ready and db_ok) else "degraded",
         "service": "Lumina AI Background Remover Backend",
-        "model_name": "u2net",
+        "model_name": getattr(remover_service, 'model_name', 'u2netp') if remover_service else "none",
+        "worker_mode": "distributed" if getattr(remover_service, 'worker_url', None) else "local",
         "model_loaded": is_ready,
         "database_connected": db_ok,
         "max_upload_size_mb": MAX_FILE_SIZE // (1024 * 1024),

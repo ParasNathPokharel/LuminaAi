@@ -40,11 +40,11 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres_secure_pass_2026}@db:5432/${POSTGRES_DB:-lumina_bgremover}
       STORAGE_DIR: /app/storage
       U2NET_HOME: /root/.u2net
-      U2NET_MODEL: u2net
+      REMBG_MODEL: ${REMBG_MODEL:-u2netp}
       SECRET_KEY: ${SECRET_KEY:-lumina_production_secret_key_change_me}
       PORT: 5000
-      GUNICORN_WORKERS: 2
-      GUNICORN_THREADS: 4
+      GUNICORN_WORKERS: 1
+      GUNICORN_THREADS: 1
     volumes:
       # Persistent storage volume — survives container teardowns and restarts
       - persistent_storage:/app/storage
